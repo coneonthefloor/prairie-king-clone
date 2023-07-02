@@ -24,3 +24,7 @@ class Tilemap:
 
     def get_tile(self, tile):
         return self.tiles[tile[0]][tile[1]]
+
+    def get_tile_scaled(self, tile, scale):
+        render_scale = (self.tile_size[0] * scale[0], self.tile_size[1] * scale[1])
+        return pygame.transform.scale(self.get_tile(tile), render_scale)

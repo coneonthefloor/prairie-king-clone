@@ -18,10 +18,22 @@ def update():
 
 
 def draw():
-    screen.fill("black")
+    screen.fill(pygame.color.Color(34, 35, 35))
+
+    tile_scale = (4, 4)
     screen.blit(
-        tilemap.get_tile(TileDefs.PLAYER),
+        tilemap.get_tile_scaled(TileDefs.PLAYER, tile_scale),
         (screen.get_width() / 2, screen.get_height() / 2),
+    )
+
+    screen.blit(
+        tilemap.get_tile_scaled(TileDefs.DOG, (2, 2)),
+        (100, 100),
+    )
+
+    screen.blit(
+        tilemap.get_tile_scaled(TileDefs.ZOMBIE, tile_scale),
+        (600, 400),
     )
 
 
