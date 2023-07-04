@@ -1,5 +1,7 @@
 import os
 import pygame
+from keyboard import update_keys
+from player import Player
 from tile_defs import TileDefs
 from tilemap import Tilemap
 
@@ -12,40 +14,35 @@ tilemap_image_path = os.path.join("assets", "colored_tilemap_packed.png")
 tilemap = Tilemap(tilemap_image_path, (8, 8), 0, 0)
 tilemap.load()
 
+player = Player()
+player_tile = tilemap.get_tile_scaled(TileDefs.PLAYER, (4, 4))
 
-def update():
-    pass
+
+def update(events, delta_time):
+    update_keys(events)
+    player.update(events, delta_time)
 
 
 def draw():
     screen.fill(pygame.color.Color(34, 35, 35))
 
-    tile_scale = (4, 4)
     screen.blit(
-        tilemap.get_tile_scaled(TileDefs.PLAYER, tile_scale),
-        (screen.get_width() / 2, screen.get_height() / 2),
-    )
-
-    screen.blit(
-        tilemap.get_tile_scaled(TileDefs.DOG, (2, 2)),
-        (100, 100),
-    )
-
-    screen.blit(
-        tilemap.get_tile_scaled(TileDefs.ZOMBIE, tile_scale),
-        (600, 400),
+        player_tile,
+        player.pos,
     )
 
 
 while running:
-    for event in pygame.event.get():
+    delta_time = clock.tick(60)
+    events = pygame.event.get()
+
+    for event in events:
         if event.type == pygame.QUIT:
             running = False
 
-    update()
+    update(events, delta_time)
     draw()
 
     pygame.display.flip()
-    clock.tick(60)
 
 pygame.quit()
