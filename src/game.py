@@ -14,17 +14,17 @@ tilemap_image_path = os.path.join("assets", "colored_tilemap_packed.png")
 tilemap = Tilemap(tilemap_image_path, (8, 8), 0, 0)
 tilemap.load()
 
-player_tile = tilemap.get_tile_scaled(TileDefs.PLAYER, (4, 4))
+player_tile = tilemap.get_tile_scaled(TileDefs.PLAYER, (8, 8))
 player = Player(player_tile)
 player.pos.x = screen.get_width() / 2
 player.pos.y = screen.get_height() / 2
 
 
 LERP_FACTOR = 0.05
-minimum_distance = 40
-maximum_distance = 100
+minimum_distance = 100
+maximum_distance = 200
 
-dog_tile = tilemap.get_tile_scaled(TileDefs.DOG, (2, 2))
+dog_tile = tilemap.get_tile_scaled(TileDefs.DOG, (6, 6))
 dog = pygame.math.Vector2(
     player.pos.x - minimum_distance, player.pos.y - minimum_distance
 )
@@ -53,6 +53,10 @@ def update(events, delta_time):
 
 def draw():
     screen.fill(pygame.color.Color(34, 35, 35))
+    if dog.x < player.pos.x:
+        screen.blit(pygame.transform.flip(dog_tile, True, False), dog)
+    else:
+        screen.blit(dog_tile, dog)
     player.draw(screen)
 
 
@@ -67,10 +71,6 @@ while running:
     update(events, delta_time)
     dog = FollowMe(player.pos, dog)
     draw()
-    if dog.x < player.pos.x:
-        screen.blit(pygame.transform.flip(dog_tile, True, False), dog)
-    else:
-        screen.blit(dog_tile, dog)
 
     pygame.display.flip()
 

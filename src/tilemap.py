@@ -19,6 +19,8 @@ class Tilemap:
             for row in range(self.margin, height, self.tile_size[1] + self.spacing):
                 tile = pygame.Surface(self.tile_size)
                 tile.blit(self.image, (0, 0), (col, row, *self.tile_size))
+                tile.set_colorkey((34, 35, 35))
+                tile = tile.convert_alpha()
                 current_row.append(tile)
             self.tiles.append(current_row)
 
