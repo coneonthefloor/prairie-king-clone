@@ -1,4 +1,3 @@
-import math
 import pygame
 
 from component import Component
@@ -11,26 +10,24 @@ class PlayerMovement(Component):
         self.player = player
 
     def process_events(self, events):
-        if is_key_down(pygame.K_LEFT):
-            self.player.vel.x = -self.player.speed
-        if is_key_down(pygame.K_RIGHT):
-            self.player.vel.x = self.player.speed
-        if is_key_down(pygame.K_UP):
-            self.player.vel.y = -self.player.speed
-        if is_key_down(pygame.K_DOWN):
-            self.player.vel.y = self.player.speed
+        up_pressed = is_key_down(pygame.K_UP)
+        down_pressed = is_key_down(pygame.K_DOWN)
+        left_pressed = is_key_down(pygame.K_LEFT)
+        right_pressed = is_key_down(pygame.K_RIGHT)
+
+        if up_pressed and not down_pressed:
+            self.player.vel.y = -1
+        if down_pressed and not up_pressed:
+            self.player.vel.y = 1
+        if not up_pressed and not down_pressed:
+            self.player.vel.y = 0
+
+        if left_pressed and not right_pressed:
+            self.player.vel.x = -1
+        if right_pressed and not left_pressed:
+            self.player.vel.x = 1
+        if not left_pressed and not right_pressed:
+            self.player.vel.x = 0
 
     def update(self, events, delta_time):
         self.process_events(events)
-
-        x, y = self.player.vel
-        speed = math.sqrt(x * x + y * y)
-        angle = math.atan2(y, x)
-
-        if speed > self.player.friction:
-            speed -= self.player.friction
-        else:
-            speed = 0
-
-        self.player.vel.x = math.cos(angle) * speed
-        self.player.vel.y = math.sin(angle) * speed
