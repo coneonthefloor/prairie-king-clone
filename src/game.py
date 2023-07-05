@@ -1,8 +1,8 @@
 import os
 import pygame
 from keyboard import update_keys
-from cursor import Cursor
-from player import Player
+from entities.cursor import Cursor
+from entities.player import Player
 from tile_defs import TileDefs
 from tilemap import Tilemap
 

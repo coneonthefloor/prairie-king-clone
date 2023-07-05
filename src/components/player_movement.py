@@ -1,6 +1,6 @@
 import pygame
 
-from component import Component
+from ecs.component import Component
 from keyboard import is_key_down
 
 

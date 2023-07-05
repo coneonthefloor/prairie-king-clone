@@ -1,5 +1,5 @@
 import pygame
-from entity import Entity
+from ecs.entity import Entity
 from tile_defs import TileDefs
 
 

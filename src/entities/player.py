@@ -1,7 +1,7 @@
 import pygame
 
-from entity import Entity
-from player_movement import PlayerMovement
+from ecs.entity import Entity
+from components.player_movement import PlayerMovement
 
 
 class Player(Entity):
