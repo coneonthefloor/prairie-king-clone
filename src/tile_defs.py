@@ -1,18 +1,13 @@
 class TileDefs:
-    # Characters
-    PLAYER = (4, 0)
-    DOG = (5, 1)
-    DUDE = (14, 0)
-    FEMME = (9, 0)
-    TREE_FRIEND = (12, 1)
+    # Characters X 24 -> 31 Y 0 -> 9
+    MINI_WIZ = (26, 9)
+    DOG = (31, 7)
 
-    # Enemies
-    ZOMBIE = (11, 0)
-    MEDUSA = (13, 0)
-    HERETIC = (9, 0)
-    GHOST = (10, 1)
+    # Weapons X 32 -> 36 Y 2 -> 9
+    WOODEN_MAGE_STAFF = (32, 4)
 
-    # UI
-    HEALTH_FULL = (6, 6)
-    HEALTH_HALF = (5, 6)
-    HEALTH_EMPTY = (4, 6)
+    # Cursors X 19 -> 31 Y 14
+    CIRCLE_CROSSHAIR = (19, 14)
+    SQUARE_CROSSHAIR = (27, 14)
+    DIAGONAL_CROSSHAIR = (28, 14)
+    DIAGONAL_CROSSHAIR_CLICKED = (31, 14)
