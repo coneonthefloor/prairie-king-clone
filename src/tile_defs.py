@@ -2,6 +2,7 @@ class TileDefs:
     # Characters X 24 -> 31 Y 0 -> 9
     MINI_WIZ = (26, 9)
     DOG = (31, 7)
+    GOBLIN = (25, 2)
 
     # Weapons X 32 -> 36 Y 2 -> 9
     WOODEN_MAGE_STAFF = (32, 4)
