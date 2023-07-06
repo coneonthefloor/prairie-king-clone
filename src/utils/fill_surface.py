@@ -1,7 +1,7 @@
 import pygame
 
 
-def fill(surface, color):
+def fill_surface(surface, color):
     """Fill all pixels of the surface with color, preserve transparency."""
     w, h = surface.get_size()
     r, g, b, _ = color

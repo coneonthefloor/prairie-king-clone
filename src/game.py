@@ -1,53 +1,57 @@
 import os
 import pygame
 from keyboard import update_keys
-from entities.cursor import Cursor
-from entities.player import Player
 from tile_defs import TileDefs
 from tilemap import Tilemap
+
 
 pygame.init()
 pygame.mouse.set_visible(False)
 screen = pygame.display.set_mode((800, 600))
 clock = pygame.time.Clock()
-running = True
+RUNNING = True
 
 tilemap_image_path = os.path.join("assets", "tileset.png")
 tilemap_image = pygame.image.load(tilemap_image_path)
 tilemap = Tilemap(tilemap_image, (16, 16), 0, 1)
 tilemap.load()
 
-player_tile = tilemap.get_tile_scaled(TileDefs.MINI_WIZ, (8, 8))
-player = Player(player_tile)
-player.pos.x = screen.get_width() / 2
-player.pos.y = screen.get_height() / 2
 
-cursor = Cursor(tilemap, (2, 2))
+class CustomCursor:
+    def __init__(self, default_image, clicked_image):
+        self.default_image = default_image
+        self.clicked_image = clicked_image
 
+    def draw(self, surface):
+        surface.blit(self.get_image(), pygame.mouse.get_pos())
 
-def update(events, delta_time):
-    update_keys(events)
-    player.update(events, delta_time)
-    cursor.update(events, delta_time)
+    def get_image(self):
+        if self.mouse_pressed():
+            return self.clicked_image
+        return self.default_image
 
-
-def draw():
-    screen.fill((34, 35, 35))
-    player.draw(screen)
-    cursor.draw(screen)
+    def mouse_pressed(self):
+        return pygame.mouse.get_pressed()[0]
 
 
-while running:
-    delta_time = clock.tick(60)
+cursor = CustomCursor(
+    tilemap.get_tile_scaled(TileDefs.DIAGONAL_CROSSHAIR, (4, 4)),
+    tilemap.get_tile_scaled(TileDefs.DIAGONAL_CROSSHAIR_CLICKED, (4, 4)),
+)
+
+
+while RUNNING:
+    clock.tick(60)
     events = pygame.event.get()
-    cursor_position = pygame.mouse.get_pos()
-
     for event in events:
         if event.type == pygame.QUIT:
-            running = False
+            RUNNING = False
 
-    update(events, delta_time)
-    draw()
+    update_keys(events)
+
+    screen.fill((34, 35, 35))
+
+    cursor.draw(screen)
 
     pygame.display.flip()
 
