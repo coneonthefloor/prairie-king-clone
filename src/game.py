@@ -1,143 +1,63 @@
 import os
+import sys
 import pygame
-from custom_cursor import CustomCursor
-from tile_defs import TileDefs
+from constants import FRAME_RATE, HEIGHT, WIDTH
+from game_object import GameObject
 from tilemap import Tilemap
 
-WIDTH = 800
-HEIGHT = 600
 
-pygame.init()
-pygame.mouse.set_visible(False)
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
-clock = pygame.time.Clock()
-RUNNING = True
+background_image = pygame.image.load(os.path.join("assets", "back.png"))
+background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
-tilemap_image_path = os.path.join("assets", "tileset.png")
-tilemap_image = pygame.image.load(tilemap_image_path)
-tilemap = Tilemap(tilemap_image, (16, 16), 0, 1)
+clouds_image = pygame.image.load(os.path.join("assets", "clouds.png"))
+clouds_image = pygame.transform.scale(clouds_image, (WIDTH, HEIGHT))
+
+cloud1 = GameObject(clouds_image, 1)
+cloud2 = GameObject(clouds_image, 1)
+cloud2.pos.x = WIDTH
+
+ground_tile_sheet =pygame.image.load(os.path.join("assets", "sheet.png"))
+tilemap = Tilemap(ground_tile_sheet, (16, 16), 0, 0)
 tilemap.load()
 
-cursor = CustomCursor(
-    tilemap.get_tile_scaled(TileDefs.DIAGONAL_CROSSHAIR, (4, 4)),
-    tilemap.get_tile_scaled(TileDefs.DIAGONAL_CROSSHAIR_CLICKED, (4, 4)),
-)
-
-goblin_image_original = tilemap.get_tile_scaled(TileDefs.GOBLIN, (6, 6))
-goblin_image_squash = tilemap.get_tile_scaled(TileDefs.GOBLIN, (6.5, 6))
-goblin_image_squeeze = tilemap.get_tile_scaled(TileDefs.GOBLIN, (6, 6.5))
-goblin_image = goblin_image_original
-goblin_rect = goblin_image.get_rect()
-goblin_anim_frame = 0
-goblin_max_anim_frame = 1
-goblin_rect.center = pygame.math.Vector2(
-    screen.get_width() // 2, screen.get_height() // 2
-)
-goblin_speed = 4
-goblin_dest = None
-goblin_anim_speed = 0.33
-goblin_anim_start = pygame.time.get_ticks()
+ground1 = tilemap.get_tile_scaled((7, 2), (5, 5))
+ground2 = tilemap.get_tile_scaled((7, 3), (5, 5))
+ground3 = tilemap.get_tile_scaled((11, 1), (5, 5))
+ground_tile_width = ground1.get_width()
+ground_tile_count = WIDTH // ground_tile_width
 
 
-def move_towards(origin, dest, speed):
-    return pygame.math.Vector2(*origin).move_towards(dest, speed)
+class Game:
+    def __init__(self):
+        pygame.init()
+        self.running = False
+        self.clock = pygame.time.Clock()
+        self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+    def run(self):
+        self.running = True
+        while self.running:
+            self.clock.tick(FRAME_RATE)
+
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit(0)
+
+            cloud1.move(left=True)
+            cloud2.move(left=True)
+            self.screen.blit(background_image, (0, 0))
+            self.screen.blit(cloud1.image, cloud1.pos)
+            self.screen.blit(cloud2.image, cloud2.pos)
+            for i in range(0, ground_tile_count):
+                self.screen.blit(ground1, (ground1.get_width() * i, HEIGHT - ground1.get_height() * 2))
+                if i % 5 == 0:
+                    self.screen.blit(ground2, (ground2.get_width() * i, HEIGHT - ground2.get_height()))
+                else:
+                    self.screen.blit(ground3, (ground3.get_width() * i, HEIGHT - ground3.get_height()))
+            pygame.display.flip()
 
 
-def distance_to(origin, dest):
-    return pygame.math.Vector2(*origin).distance_to(dest)
-
-
-class GameObject:
-    def __init__(self, image, speed):
-        self.speed = speed
-        self.image = image
-        self.pos = image.get_rect()
-
-    def get_image_height(self):
-        return self.image.get_height()
-
-    def get_image_width(self):
-        return self.image.get_width()
-
-    def move(self, up=False, down=False, left=False, right=False):
-        if right:
-            self.pos.right += self.speed
-        if left:
-            self.pos.right -= self.speed
-        if down:
-            self.pos.top += self.speed
-        if up:
-            self.pos.top -= self.speed
-
-        if self.pos.left >= WIDTH:
-            self.pos.right = self.speed
-        if self.pos.right <= 0:
-            self.pos.left = WIDTH - self.speed
-
-        if self.pos.top >= HEIGHT:
-            self.pos.bottom = self.speed
-        if self.pos.bottom <= 0:
-            self.pos.top = HEIGHT - self.speed
-
-
-p = GameObject(goblin_image, goblin_speed)
-
-while RUNNING:
-    clock.tick(60)
-
-    events = pygame.event.get()
-    for event in events:
-        if event.type == pygame.QUIT:
-            RUNNING = False
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_UP]:
-        p.move(up=True)
-    if keys[pygame.K_DOWN]:
-        p.move(down=True)
-    if keys[pygame.K_LEFT]:
-        p.move(left=True)
-    if keys[pygame.K_RIGHT]:
-        p.move(right=True)
-
-    screen.fill((34, 35, 35))
-
-    goblin_pos_rounded = (round(goblin_rect.x), round(goblin_rect.y))
-    screen.blit(goblin_image, goblin_pos_rounded)
-
-    screen.blit(p.image, p.pos)
-
-    if cursor.pressed():
-        goblin_dest = cursor.get_pos()
-
-    if goblin_dest:
-        goblin_rect.center = move_towards(goblin_rect.center, goblin_dest, goblin_speed)
-        seconds = (pygame.time.get_ticks() - goblin_anim_start) / 1000
-        if seconds > goblin_anim_speed:
-            goblin_anim_start = pygame.time.get_ticks()
-            goblin_anim_frame = goblin_anim_frame + 1
-            if goblin_anim_frame > goblin_max_anim_frame:
-                goblin_anim_frame = 0
-
-            if goblin_anim_frame == 0:
-                goblin_image = goblin_image_squash
-            if goblin_anim_frame == 1:
-                goblin_image = goblin_image_squeeze
-            rect = goblin_rect
-            goblin_rect = goblin_image.get_rect()
-            goblin_rect.center = rect.center
-
-        if distance_to(goblin_rect.center, goblin_dest) == 0:
-            goblin_dest = None
-            goblin_anim_start = pygame.time.get_ticks()
-            goblin_anim_frame = 0
-            goblin_image = goblin_image_original
-            rect = goblin_rect
-            goblin_rect = goblin_image.get_rect()
-            goblin_rect.center = rect.center
-
-    cursor.update()
-    cursor.draw(screen)
-
-    pygame.display.flip()
-
-pygame.quit()
+if __name__ == "__main__":
+    Game().run()
