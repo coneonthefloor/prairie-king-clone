@@ -1,17 +1,18 @@
-import math
 import os
 import sys
 import pygame
 from clouds import Clouds
-from constants import FRAME_RATE, HEIGHT, WIDTH
+from constants import FLOOR, FRAME_RATE, HEIGHT, WIDTH
 from ground import Ground
+from player import Player
 
 
 background_image = pygame.image.load(os.path.join("assets", "back.png"))
 background_image = pygame.transform.scale(background_image, (WIDTH, HEIGHT))
 
 clouds = Clouds()
-ground = Ground(HEIGHT - 200)
+ground = Ground(FLOOR)
+player = Player()
 
 
 class Game:
@@ -36,6 +37,9 @@ class Game:
 
             clouds.update()
             clouds.draw(self.screen)
+
+            player.update()
+            player.draw(self.screen)
 
             ground.update()
             ground.draw(self.screen)
