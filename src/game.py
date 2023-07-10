@@ -37,6 +37,7 @@ class Game:
             clouds.update()
             clouds.draw(self.screen)
 
+            ground.update()
             ground.draw(self.screen)
 
             pygame.display.flip()

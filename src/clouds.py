@@ -11,11 +11,10 @@ class Clouds(GameObject):
         self.speed = 1
         self.image = pygame.image.load(os.path.join("assets", "clouds.png"))
         self.image = pygame.transform.scale(self.image, (WIDTH, HEIGHT))
-        self.pos = self.image.get_rect()
 
     def update(self):
         self.move(left=True)
 
     def draw(self, surface):
-        surface.blit(self.image, self.pos)
-        surface.blit(self.image, (self.pos.x + WIDTH, self.pos.y))
+        surface.blit(self.image, (self.pos.x - WIDTH, 0, WIDTH, HEIGHT))
+        surface.blit(self.image, (self.pos.x, 0, WIDTH, HEIGHT))

@@ -13,6 +13,7 @@ class Ground(GameObject):
         tilemap.load()
 
         self.y_offset = y_offset
+        self.speed = 3
         self.top_image = tilemap.get_tile_scaled((7, 2), (5, 5))
         self.blank_image = tilemap.get_tile_scaled((11, 1), (5, 5))
         self.variant_image = tilemap.get_tile_scaled((8, 6), (5, 5))
@@ -20,6 +21,9 @@ class Ground(GameObject):
         self.tile_height = self.top_image.get_height()
         self.tile_count = WIDTH // self.tile_width
         self.full_image = None
+
+    def update(self):
+        self.move(left=True)
 
     def generate_full_image(self):
         surface = pygame.Surface((WIDTH, HEIGHT), pygame.SRCALPHA)
@@ -37,4 +41,5 @@ class Ground(GameObject):
     def draw(self, surface):
         if not self.full_image:
             self.full_image = self.generate_full_image()
-        surface.blit(self.full_image, (0, 0, WIDTH, HEIGHT))
+        surface.blit(self.full_image, (self.pos.x - WIDTH, 0, WIDTH, HEIGHT))
+        surface.blit(self.full_image, (self.pos.x, 0, WIDTH, HEIGHT))
