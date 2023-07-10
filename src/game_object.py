@@ -1,11 +1,18 @@
+import pygame
 from constants import HEIGHT, WIDTH
 
 
 class GameObject:
-    def __init__(self, image, speed):
-        self.speed = speed
-        self.image = image
-        self.pos = image.get_rect()
+    def __init__(self, tag):
+        self.tag = tag
+        self.speed = 0
+        self.pos = pygame.Rect(0, 0, 0, 0)
+
+    def update(self):
+        pass
+
+    def draw(self):
+        pass
 
     def get_image_height(self):
         return self.image.get_height()
