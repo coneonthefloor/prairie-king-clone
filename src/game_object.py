@@ -16,12 +16,6 @@ class GameObject:
     def draw(self):
         pass
 
-    def get_image_height(self):
-        return self.image.get_height()
-
-    def get_image_width(self):
-        return self.image.get_width()
-
     def move(self, up=False, down=False, left=False, right=False):
         if right:
             self.pos.x += self.speed
