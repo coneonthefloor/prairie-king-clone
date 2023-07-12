@@ -6,7 +6,9 @@ class GameObject:
     def __init__(self, tag):
         self.tag = tag
         self.speed = 0
-        self.pos = pygame.Rect(0, 0, 0, 0)
+        self.width = 0
+        self.height = 0
+        self.pos = pygame.Vector2()
 
     def update(self):
         pass
@@ -22,20 +24,20 @@ class GameObject:
 
     def move(self, up=False, down=False, left=False, right=False):
         if right:
-            self.pos.right += self.speed
+            self.pos.x += self.speed
         if left:
-            self.pos.right -= self.speed
+            self.pos.x -= self.speed
         if down:
-            self.pos.top += self.speed
+            self.pos.y += self.speed
         if up:
-            self.pos.top -= self.speed
+            self.pos.y -= self.speed
 
-        if self.pos.left >= WIDTH:
-            self.pos.right = self.speed
-        if self.pos.right <= 0:
-            self.pos.left = WIDTH - self.speed
+        if self.pos.x >= WIDTH:
+            self.pos.x = self.speed + self.width
+        if self.pos.x + self.width <= 0:
+            self.pos.x = WIDTH - self.speed
 
-        if self.pos.top >= HEIGHT:
-            self.pos.bottom = self.speed
-        if self.pos.bottom <= 0:
-            self.pos.top = HEIGHT - self.speed
+        if self.pos.y >= HEIGHT:
+            self.pos.y = self.speed + self.height
+        if self.pos.y + self.height <= 0:
+            self.pos.y = HEIGHT - self.speed

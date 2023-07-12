@@ -36,12 +36,20 @@ class Game:
             self.screen.blit(background_image, (0, 0))
 
             clouds.update()
+            if player.vel.x > 0:
+                clouds.speed = 1
+            else:
+                clouds.speed = 0.5
             clouds.draw(self.screen)
 
             player.update()
             player.draw(self.screen)
 
             ground.update()
+            if player.vel.x > 0:
+                ground.speed = 3
+            else:
+                ground.speed = 2
             ground.draw(self.screen)
 
             pygame.display.flip()
