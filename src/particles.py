@@ -5,8 +5,8 @@ import pygame
 class Particle:
     def __init__(self, pos):
         self.x, self.y = pos[0], pos[1]
-        self.vx, self.vy = random.randint(-2, 2), random.randint(-10, 0) * 0.1
-        self.rad = 12
+        self.vx, self.vy = random.randint(-2, 2), random.randint(-6, 0) * 0.1
+        self.rad = 6
 
     def draw(self, win):
         pygame.draw.circle(win, (255, 255, 255), (self.x, self.y), self.rad)
